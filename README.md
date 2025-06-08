@@ -1,143 +1,60 @@
-# 20 CI-CD: GitHub Actions CI/CD Setup
+# 20 CI-CD: GitHub Actions CI/CD Solution
 
-## Your Task
+## Overview
 
-As applications scale and develop, developers want to ensure that certain quality checks are met prior to merging to important branches; thus, you'll want to familiarize yourself with Continuous Integration (CI) and Continuous Deployment (CD) that are common practices used to ensure consistency, quality, and deployment of latest code once all checks have been met and merged to `main`.
+This project demonstrates a fullstack web application with a robust CI/CD pipeline using GitHub Actions. The pipeline ensures code quality and automates deployment to Render, following best practices for modern software development.
 
-Your task is to create a CI/CD pipeline using GitHub Actions to run the component tests via Cypress when a Pull Request is made to the `develop` branch, and the application is deployed when code is merged from `develop` to the `main` branch.
+## Features
 
-## User Story
+- **Continuous Integration (CI):**
+  - All new features are developed in feature branches and merged into the `develop` branch via Pull Requests.
+  - When a Pull Request is created to the `develop` branch, a GitHub Action is triggered to run Cypress component tests, ensuring code quality before merging.
+  - Test results are visible in the GitHub Actions tab for easy review.
 
-```md
-AS A developer looking to integrate a pipeline in a codebase for continuous integration and deployment, 
-I WANT to create a GitHub Action that will follow best practices by running test cases when a Pull Request is made to the develop branch
-SO THAT I can ensure that all code integrations are clean and pass the proper requirements.
+- **Continuous Deployment (CD):**
+  - When code is merged from `develop` to the `main` branch, another GitHub Action is triggered to automatically deploy the application to Render using a secure deploy hook.
+  - This ensures the live application is always up-to-date with the latest stable code.
 
-AS A developer looking to deploy the application automatically to Render when code is merged from develop to main,
-I WANT to create a GitHub Action that will run when the code is merged to main and automatically deploys to Render
-SO THAT the application is constantly updated when major releases are made to the main branch.
-```
+## Branching Workflow
 
-## Acceptance Criteria
+- All feature development occurs in separate branches, which are merged into `develop` via Pull Requests.
+- Only the `develop` branch is merged into `main` for production releases.
+- This workflow ensures a clean, stable main branch and facilitates easy integration and testing.
 
-```md
-GIVEN a fullstack application for a web developer,
-WHEN I upload new features to the application
-THEN I should be making Pull Requests to a develop branch first
-WHEN I create a Pull Request to a develop branch
-THEN I should be executing a GitHub Action that checks the Cypress component tests
-WHEN I see that the tests pass on GitHub Action
-THEN I should see those test results on GitHub Action and merge the code
-WHEN I push the code from the develop branch to the main branch
-THEN I should see that another GitHub Action triggers and should automatically deploy to Render
-```
+## CI/CD Implementation
 
-## Mock-Up
+### 1. Cypress Tests on Pull Request to `develop`
+- **Trigger:** Pull Request to `develop` branch
+- **Action:** Runs Cypress component tests using the configuration in `Develop/cypress.config.ts`.
+- **Result:** Test results are displayed in the GitHub Actions tab. Code can only be merged if tests pass.
 
-Your GitHub Actions for tests should look similar to the image below:
+### 2. Automatic Deployment to Render on Merge to `main`
+- **Trigger:** Push/merge to `main` branch
+- **Action:** Triggers a deploy hook to Render, automatically deploying the latest code.
+- **Result:** The application is updated at the live URL with no manual intervention.
 
-![GitHub Actions Cypress Test.](./Assets/19-Actions-Cypress-Tests.png)
-
-Your GitHub Actions for deployments should look similar to the image below:
-
-![GitHub Actions Render Deploy.](./Assets/19-Actions-Render-Deploy.png)
 
 ## Getting Started
 
-You'll first upload the content inside the `Develop` folder to a GitHub Repository. 
+1. **Clone the repository and install dependencies:**
+   - Run `npm run install` from the `Develop` directory to install both client and server dependencies.
+2. **Set up Render deployment:**
+   - Deploy the application to Render and MongoDB Atlas as described in the [Render and MongoDB deployment guide](https://coding-boot-camp.github.io/full-stack/mongodb/deploy-with-render-and-mongodb-atlas).
+   - In Render, turn off Auto-Deploy and copy the Deploy Hook URL.
+   - Add the Deploy Hook URL as a secret (`RENDER_DEPLOY_HOOK_URL`) in your GitHub repository settings.
+3. **Branching:**
+   - Create a `develop` branch for all feature integrations.
+   - Only merge `develop` into `main` for production releases.
+4. **CI/CD Workflows:**
+   - Two YAML files in `.github/workflows/` handle CI and CD:
+     - `ci-cypress.yml`: Runs Cypress tests on PRs to `develop`.
+     - `deploy-render.yml`: Deploys to Render on merge to `main`.
 
-You'll then deploy the application via [Render and MongoDB](https://coding-boot-camp.github.io/full-stack/mongodb/deploy-with-render-and-mongodb-atlas).
+## Deployment
 
-Once you see the application has been deployed, you'll navigate to the Settings option and turn off Auto-Deploy.
-
-![Render image of auto deploy and hook](./Assets/19-Render-Settings.png)
-
-Copy the `Deploy hook` URL as you will need it to properly configure GitHub Actions to deploy to Render.
-
-Next, create a `develop` branch (either on GitHub directly or via command-line) where all feature branches will be merged to.
-
-> **note** Your feature branches should always be merged to the `develop` branch. Only the `develop` branch should be merged to the `main` branch.
-
-You will want to have two separate `YAML` files: one configured to execute GitHub Actions for tests when a Pull Request is made to the `develop` branch and the other configured to execute GitHub Actions to automatically deploy to Render when `develop` is merged to `main` branch.
-
-Use the following resources below:
-
-Resources:
-
-* [Render Deploy Hooks](https://docs.render.com/deploy-hooks)
-
-* [Render API Key](https://docs.render.com/api)
-
-* [GitHub Repo Secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
-
-* [Main and Develop Branches](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
-
-## Grading Requirements
-
-> **note** If a Challenge assignment submission is marked as “0”, it is considered incomplete and will not count toward your graduation requirements. Examples of incomplete submissions include the following:
->
-> * A repository that has no code
->
-> * A repository that includes a unique name but nothing else
->
-> * A repository that includes only a README file but nothing else
->
-> * A repository that only includes starter code
-
-This Challenge is graded based on the following criteria:
-
-### Deployment: 32%
-
-* Application deployed at live URL.
-
-* Application loads with no errors.
-
-* Application GitHub URL submitted.
-
-* GitHub repository contains application code.
-
-### Technical Acceptance Criteria: 40%
-
-* Satisfies all of the preceding acceptance criteria plus the following:
-
-  * The GitHub repository must have both a `main` branch and a `develop` branch and use `feature` branches to submit Pull Requests.
-
-  * A GitHub Action must trigger when a Pull Request is submitted to a `develop` branch and the Action must execute the Cypress component tests.
-
-  * All Cypress component tests must pass.
-
-  * A GitHub Action must trigger when a Pull Request is submitted and merged to the `main` branch and the Action must automatically deploy the application to Render.
-
-  * The application must be deployed to Render.
-
-### Application Quality: 15%
-
-* User experience is intuitive and easy to navigate.
-
-* User interface style is clean and polished.
-
-* Application resembles the mock-up functionality provided in Challenge instructions.
-
-### Repository Quality: 13%
-
-* Repository has a unique name.
-
-* Repository follows best practices for file structure and naming conventions.
-
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-* Repository contains multiple descriptive commit messages.
-
-* Repository contains high-quality README file with description, screenshot, and link to deployed application.
-
-## Review
-
-You are required to submit BOTH of the following for review:
-
-* The URL of the functional, deployed application.
-
-* The URL of the GitHub repository, with a unique name and a README that describes the project.
+- **Live Application URL:** [Add your Render deployment URL here]
+- **GitHub Repository URL:** [Add your GitHub repository URL here]
 
 ---
 
-© 2024 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+© 2025 Christopher Lin. All Rights Reserved.
