@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, '../../client/dist')));
 app.use(routes);
 
 // Fallback to index.html for SPA routes
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
