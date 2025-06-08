@@ -52,8 +52,8 @@ This project demonstrates a fullstack web application with a robust CI/CD pipeli
 
 ## Deployment
 
-- **Live Application URL:** [Add your Render deployment URL here]
-- **GitHub Repository URL:** [Add your GitHub repository URL here]
+- **Live Application URL:** (https://columbia-coding-bootcamp-module-20.onrender.com)
+- **GitHub Repository URL:** (https://github.com/christophermlin/Columbia-Coding-Bootcamp-Module-20-Challenge)
 
 ---
 
