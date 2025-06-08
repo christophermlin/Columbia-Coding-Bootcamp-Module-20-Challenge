@@ -1,0 +1,28 @@
+# Continuous Integration: Cypress Tests on PR to develop
+
+name: CI - Cypress Tests
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Develop
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run build || echo "No build step"
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          working-directory: ./Develop
